@@ -5,9 +5,11 @@ import { Issue, User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
+  const router = useRouter();
   const { data: users, error, isLoading } = useUsers();
 
   if (isLoading) return <Skeleton height="2rem" />;
@@ -15,13 +17,17 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   if (error) return null;
 
   const assignIssue = (userId: string) => {
-    axios
-      .patch("/api/issues/" + issue.id, {
+    try {
+      axios.patch("/api/issues/" + issue.id, {
         assignedToUserId: userId === "unassigned" ? null : userId,
-      })
-      .catch(() => {
-        toast.error("Changes could not be saved");
       });
+      axios.patch("/api/issues/" + issue.id, {
+        status: userId === "unassigned" ? issue.status : "IN_PROGRESS",
+      });
+      router.refresh();
+    } catch (error) {
+      toast.error("Changes could not be saved");
+    }
   };
 
   return (

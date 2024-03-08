@@ -1,35 +1,24 @@
 "use client";
 
-import { Issue, Status, User } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React from "react";
+import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import Skeleton from "react-loading-skeleton";
 
 const StatusSelect = ({ issue }: { issue: Issue }) => {
-  //   if (!issue) return <Skeleton height="2rem" />;
+  const router = useRouter();
 
   const assignStatus = (value: Status) => {
-    axios
-      .patch("/api/issues/" + issue.id, {
+    try {
+      axios.patch("/api/issues/" + issue.id, {
         status: value,
-      })
-      .catch(() => {
-        toast.error("Changes could not be saved");
       });
+      router.refresh();
+    } catch (error) {
+      toast.error("Changes could not be saved");
+    }
   };
-
-  //   const assignStatus = (value: Status) => {
-  //     try {
-  //       axios.patch("/api/issues/" + issue.id, {
-  //         status: value,
-  //       });
-  //     } catch (error) {
-  //       toast.error("Changes could not be saved");
-  //     }
-  //   };
 
   const statuses = [
     { label: "Open", value: "OPEN" },

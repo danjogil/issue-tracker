@@ -68,9 +68,14 @@ const AuthStatus = () => {
 
   if (status === "unauthenticated")
     return (
-      <Link className="nav-link" href="/api/auth/signin">
-        Login
-      </Link>
+      <Flex gap="3">
+        <Link className="nav-link" href="/register">
+          Register
+        </Link>
+        <Link className="nav-link" href="/api/auth/signin">
+          Login
+        </Link>
+      </Flex>
     );
 
   return (

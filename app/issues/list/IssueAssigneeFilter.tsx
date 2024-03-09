@@ -14,8 +14,6 @@ const IssueAssigneeFilter = () => {
 
   const { data: users, error, isLoading } = useUsers();
 
-  if (isLoading) return <Skeleton height="2rem" />;
-
   if (error) return null;
 
   return (

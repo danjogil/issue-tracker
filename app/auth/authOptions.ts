@@ -43,6 +43,11 @@ const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      return baseUrl + "/";
+    },
+  },
 };
 
 export default authOptions;
